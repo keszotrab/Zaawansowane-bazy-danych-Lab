@@ -1,0 +1,68 @@
+--12.04 OK
+SELECT e.first_name, e.surname 
+FROM employees e
+INNER JOIN lecturers l ON e.employee_id = l.lecturer_id
+
+--12.05 OK
+SELECT * -- e.first_name, e.surname 
+FROM employees e
+LEFT JOIN lecturers l ON e.employee_id = l.lecturer_id
+WHERE l.lecturer_id IS NULL
+
+--12.06  OK 
+SELECT s.first_name, s.surname, s.group_no
+FROM students s 
+LEFT JOIN students_modules sm ON sm.student_id = s.student_id
+WHERE sm.module_id is null
+ORDER BY surname, first_name
+
+--12.07
+SELECT *--s.surname, s.first_name, s.group_no, sg.exam_date 
+FROM students s
+INNER JOIN  student_grades sg 
+ON s.student_id = sg.student_id
+
+--12.08 uzu
+
+--12.09 OK??? MAYBE?
+Select *
+from students s 
+LEFT JOIN students_modules sm ON s.student_id = sm.module_id
+LEFT join modules m ON m.module_id = sm.module_id
+WHERE module_name = 'Statistics'
+
+--12.10
+
+
+--12.11 OK
+Select *
+from employees e
+LEFT join lecturers l ON e.employee_id = l.lecturer_id
+WHERE department is not null
+
+--SKIP TO 
+
+--12.14
+Select s.first_name, s.surname as [student surname], module_name, e.surname "Lecturer Surename", l.department
+from students s 
+LEFT join students_modules sm ON s.student_id = sm.student_id
+LEFT JOIN modules m ON sm.module_id = m.module_id
+LEFT JOIN lecturers l ON m.lecturer_id = l.lecturer_id
+LEFT JOIN employees e ON l.lecturer_id = e.employee_id
+
+--12.15 OK
+SELECT SUM(m.no_of_hours)
+FROM modules m
+LEFT JOIN lecturers l ON l.lecturer_id = m.lecturer_id
+WHERE l.acad_position IS NULL OR l.lecturer_id is null
+
+--12.21
+Select *
+From modules m
+INNER JOIN lecturers l ON l.lecturer_id = m.lecturer_id
+WHERE m.department != l.department
+
+
+
+
+
