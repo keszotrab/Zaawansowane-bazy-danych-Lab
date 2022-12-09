@@ -1,0 +1,58 @@
+create or alter function studmod_f (@module varchar(100))
+returns table as return
+--Lepsze wyszukiwanie
+
+select * 
+fROM students
+where student_id in
+(select student_id 
+from students_modules
+where module_id in
+(select module_id
+from modules
+where module_name = @module))
+--Order by surname
+--
+
+SELECT * FROM studmod_f('mathematics')
+
+
+create or alter view studmod_v AS
+select * 
+fROM students
+where student_id in
+(select student_id 
+from students_modules
+where module_id in
+(select module_id
+from modules
+where module_name = SESSION_CONTEXT(N'module')))
+
+SELECT * FROM studmod_v
+
+exec sp_set_session_context 
+@key=N'module', @value = 'mathematics'
+
+--22.06a
+--SELECT TOP(1) * FROM students s 
+--inner join student_grades sg on s.student_id = sg.student_id
+--where s.student_id=2
+--order by exam_date desc
+
+--(CTE
+with c as (
+SELECT s.student_id, surname, first_name, exam_date, grade, row_number() over(partition by s.student_id order by exam_date desc) row_num FROM students s 
+inner join student_grades sg on s.student_id = sg.student_id
+)
+--CTE)
+Select * 
+From c 
+where row_num = 1
+
+--Derive table stosowane zamiennie
+SELECT * FROM 
+(SELECT s.student_id, surname, first_name, exam_date, grade, row_number() over(partition by s.student_id order by exam_date desc) row_num FROM students s 
+inner join student_grades sg on s.student_id = sg.student_id 
+) c
+WHERE row_num=1
+
